@@ -3,6 +3,7 @@ const formidable = require('formidable');
 const fs = require('fs');
 const uuid = require('uuid');
 const url = require('url');
+const util = require('util');
 
 // Azure Blob Storage setup
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
@@ -73,14 +74,20 @@ server.on('request', async (request, response) => {
         var formOptions = { keepExtensions: true, maxFileSize: 30 * 1024 * 1024};
         var form = new formidable.IncomingForm(formOptions);
 
-        form.parse(request, function (err, fields, files)
-        {
-            var uploadedPath = files.samplefile.path;
-            var newFileName = uuid.v1() + "_" + files.samplefile.name;
+        form.parse(request, function(err, fields, files) {});
+
+        form.on('end', function(fields, files) {
+            var uploadedPath = this.openedFiles[0].path;
+            var newFileName = uuid.v1() + "_" + this.openedFiles[0].name;
             console.log(newFileName);
             uploadFileToBlobStorage(uploadedPath, newFileName);
             response.write(`<div class="container"><h1>File uploaded!</h1><p><a href="viewresults?file=${newFileName}">View Results!</a></p></div>`);
-            response.end();    
+            response.end(); 
+
+        });
+
+        form.on('error', function(err) {
+            console.error(err);
         });
 
       } else {
@@ -93,5 +100,5 @@ server.on('request', async (request, response) => {
       }
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 1337;
 server.listen(port);
