@@ -3,14 +3,19 @@ const formidable = require('formidable');
 const fs = require('fs');
 const uuid = require('uuid');
 const url = require('url');
-const util = require('util');
+
+const maxFileSizeMB = 3
+
+// datetime for blob storage container
+const datetime = require('node-datetime');
+var dt = datetime.create();
 
 // Azure Blob Storage setup
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const { AbortController } = require("@azure/abort-controller");
 const account = process.env.ACCOUNT_NAME || "";
 const accountKey = process.env.ACCOUNT_KEY || "";
-const containerName = "wishlist"
+var containerName = "wishlist" + dt.format('Ymd');
 const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
 const blobServiceClient = new BlobServiceClient(`https://${account}.blob.core.windows.net/`, sharedKeyCredential);
 
@@ -71,7 +76,7 @@ server.on('request', async (request, response) => {
 
     if (request.url == '/fileupload') {
 
-        var formOptions = { keepExtensions: true, maxFileSize: 30 * 1024 * 1024};
+        var formOptions = { keepExtensions: true, maxFileSize: maxFileSizeMB * 1024 * 1024};
         var form = new formidable.IncomingForm(formOptions);
 
         form.parse(request, function(err, fields, files) {});
@@ -92,6 +97,8 @@ server.on('request', async (request, response) => {
 
       } else {
         response.write('<div class="container"><h1>Azure Event Grid Serverless Demo</h1>')
+        response.write('<p>Select a JPEG or PNG to upload to see how we can use Azure Event Grid to tie together serverless solutions.</p>');
+        response.write(`<p>Maximum file size: ${maxFileSizeMB}MB.</p>`); 
         response.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
         response.write('<div class="form-group"><label for="samplefile">Select File:</label><input type="file" name="samplefile" accept=".jpg,.png" class="form-control"></div>');
         response.write('<input type="submit" class="btn btn-default">');
