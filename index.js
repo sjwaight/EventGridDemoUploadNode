@@ -64,12 +64,13 @@ server.on('request', async (request, response) => {
         }
 
         response.write('<div class="container"><h1>Results for Upload</h1>');
+        response.write(`<p><a href="/">Upload another file</a></p></div>`);
         response.write("<h2>Computer Vision Auto Caption</h2>");
         response.write(`<p>${imageDescription}</p>`);
+        response.write("<h2>Thumbnail (200x200)</h2>");
+        response.write(`<p><img src="https://${account}.blob.core.windows.net/${containerName}/${thumbnailFileName}"></p>`);
         response.write("<h2>Original Image</h2>");
         response.write(`<p><img src="https://${account}.blob.core.windows.net/${containerName}/${fileName}"></p>`);
-        response.write("<h2>Thumbnail</h2>");
-        response.write(`<p><img src="https://${account}.blob.core.windows.net/${containerName}/${thumbnailFileName}"></p>`);
         response.write(`<p><a href="/">Upload another file</a></p></div>`);
         return response.end();
     }
@@ -88,7 +89,6 @@ server.on('request', async (request, response) => {
             uploadFileToBlobStorage(uploadedPath, newFileName);
             response.write(`<div class="container"><h1>File uploaded!</h1><p><a href="viewresults?file=${newFileName}">View Results!</a></p></div>`);
             response.end(); 
-
         });
 
         form.on('error', function(err) {
