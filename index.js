@@ -64,7 +64,7 @@ server.on('request', async (request, response) => {
         }
 
         response.write('<div class="container"><h1>Results for Upload</h1>');
-        response.write(`<p><a href="/">Upload another file</a></p></div>`);
+        response.write(`<p><a href="/">Upload another file</a></p>`);
         response.write("<h2>Computer Vision Auto Caption</h2>");
         response.write(`<p>${imageDescription}</p>`);
         response.write("<h2>Thumbnail (200x200)</h2>");
