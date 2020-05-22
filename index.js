@@ -19,7 +19,7 @@ const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
 const blobServiceClient = new BlobServiceClient(`https://${account}.blob.core.windows.net/`, sharedKeyCredential);
 
 // Upload file from local web server to Azure Blob Storage, uniquely renaming file
-async function uploadFileToBlobStorage(filePath, fileName) {
+async function uploadFileToBlobStorage(filePath, fileName, containerName) {
 
     const containerClient = blobServiceClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
@@ -88,7 +88,7 @@ server.on('request', async (request, response) => {
             var uploadedPath = this.openedFiles[0].path;
             var newFileName = uuid.v1() + "_" + this.openedFiles[0].name;
             console.log(newFileName);
-            uploadFileToBlobStorage(uploadedPath, newFileName);
+            uploadFileToBlobStorage(uploadedPath, newFileName, containerName);
             response.write(`<div class="container"><h1>File uploaded!</h1><p><a href="viewresults?file=${newFileName}">View Results!</a></p></div>`);
             response.end(); 
         });
