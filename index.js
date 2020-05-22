@@ -7,15 +7,14 @@ const url = require('url');
 const maxFileSizeMB = 3
 
 // datetime for blob storage container
-const datetime = require('node-datetime');
-var dt = datetime.create();
+var datetime = require('node-datetime');
+
 
 // Azure Blob Storage setup
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const { AbortController } = require("@azure/abort-controller");
 const account = process.env.ACCOUNT_NAME || "";
 const accountKey = process.env.ACCOUNT_KEY || "";
-var containerName = "wishlist" + dt.format('Ymd');
 const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
 const blobServiceClient = new BlobServiceClient(`https://${account}.blob.core.windows.net/`, sharedKeyCredential);
 
@@ -42,7 +41,10 @@ const server = http.createServer();
 server.on('request', async (request, response) => {
 
     response.writeHead(200, {'Content-Type': 'text/html'});
-    response.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">')
+    response.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">');
+
+    var dt = datetime.create();
+    var containerName = "wishlist" + dt.format('Ymd');
 
     if (request.url && request.url.startsWith('/viewresult'))
     {
