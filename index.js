@@ -24,6 +24,11 @@ async function uploadFileToBlobStorage(filePath, fileName, containerName) {
     const containerClient = blobServiceClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
  
+    // if the target container hasn't yet been created let's create it.
+    if(containerClient.exists() == false) {
+        containerClient.create();
+    }
+
     // set the right content type for the uploaded image in blob storage
     var contentType = "image/png";
     if(fileName.endsWith('jpg')) {
