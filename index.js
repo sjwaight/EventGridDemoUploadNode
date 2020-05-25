@@ -24,9 +24,13 @@ async function uploadFileToBlobStorage(filePath, fileName, containerName) {
     const containerClient = blobServiceClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
  
-    // if the target container hasn't yet been created let's create it.
-    if(containerClient.exists() == false) {
-        containerClient.create();
+    var continerExists = await containerClient.exists();
+
+    // if the target container hasn't yet been created let's create it
+    // and set anonymous access policy on blobs only.
+    if(!continerExists) {
+        await containerClient.create();
+        await containerClient.setAccessPolicy('blob');
     }
 
     // set the right content type for the uploaded image in blob storage
