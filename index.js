@@ -50,7 +50,7 @@ const server = http.createServer();
 server.on('request', async (request, response) => {
 
     response.writeHead(200, {'Content-Type': 'text/html'});
-    response.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">');
+    response.write('<html><head><title>Azure Event Grid Serverless Demo</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"></head><body>');
 
     var dt = datetime.create();
     var containerName = "wishlist" + dt.format('Ymd');
@@ -98,7 +98,7 @@ server.on('request', async (request, response) => {
             var newFileName = uuid.v1() + "_" + this.openedFiles[0].name;
             console.log(newFileName);
             uploadFileToBlobStorage(uploadedPath, newFileName, containerName);
-            response.write(`<div class="container"><h1>File uploaded!</h1><p><a href="viewresults?file=${newFileName}">View Results!</a></p></div>`);
+            response.write(`<div class="container"><h1>File uploaded!</h1><p><a href="viewresults?file=${newFileName}">View Results!</a></p></div></body></html>`);
             response.end(); 
         });
 
@@ -107,13 +107,14 @@ server.on('request', async (request, response) => {
         });
 
       } else {
-        response.write('<div class="container"><h1>Azure Event Grid Serverless Demo</h1>')
+        response.write('<div class="container"><h1>Azure Event Grid Serverless Demo</h1>');
+        response.write('<p>View source on <a href="https://github.com/sjwaight/EventGridDemoUploadNode" target="_blank">GitHub</a>.</p>');
         response.write('<p>Select a JPEG or PNG to upload to see how we can use Azure Event Grid to tie together serverless solutions.</p>');
         response.write(`<p>Maximum file size: ${maxFileSizeMB}MB.</p>`); 
         response.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
         response.write('<div class="form-group"><label for="samplefile">Select File:</label><input type="file" name="samplefile" accept=".jpg,.png" class="form-control"></div>');
         response.write('<input type="submit" class="btn btn-default">');
-        response.write('</form></div>');
+        response.write('</form></div></body></html>');
         return response.end();
       }
 });
