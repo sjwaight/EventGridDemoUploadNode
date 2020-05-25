@@ -82,7 +82,7 @@ server.on('request', async (request, response) => {
         response.write(`<p><img src="https://${account}.blob.core.windows.net/${containerName}/${thumbnailFileName}"></p>`);
         response.write("<h2>Original Image</h2>");
         response.write(`<p><img src="https://${account}.blob.core.windows.net/${containerName}/${fileName}"></p>`);
-        response.write(`<p><a href="/">Upload another file</a></p></div>`);
+        response.write(`<p><a href="/">Upload another file</a></p></div></body></html>`);
         return response.end();
     }
 
