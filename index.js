@@ -5,7 +5,7 @@ const uuid = require('uuid');
 const url = require('url');
 const appInsights = require('applicationinsights');
 
-const maxFileSizeMB = 3
+const maxFileSizeMB = 30
 
 // datetime for blob storage container
 var datetime = require('node-datetime');
